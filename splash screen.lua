@@ -40,13 +40,18 @@ local bkgSound
 local bkgChannel
 local titleSound
 local titleChannel
+
+--letters
+local vLetter
+local gLetter
 --------------------------------------------------------------------------------------
 --LOCAL FUNCTIONS
 --------------------------------------------------------------------------------------
 
 local function setFire( )
     bkgChannel = audio.play(bkgSound)
-   transition.to(companyLogo, {alpha = 0, time = 1200})
+   transition.to(gLetter, {alpha = 0, time = 1200})
+   transition.to(vLetter, {alpha = 0, time = 1200})
    transition.to(companyFire, {alpha = 1, time = 1300})
    transition.to(companyFire2,{alpha = 1, time = 1700})
    transition.to(companyFire, {alpha = 0, time = 1700})
@@ -89,7 +94,15 @@ end
 local function titlePlay( )
     titleChannel = audio.play(titleSound)
 end
-  
+
+local function screenTransition( )
+    composer.gotoScene("main_menu", {effect = "fade"})
+end
+
+local function moveLetters()
+    transition.to(gLetter, {time = 1500, x = 510, y = 380})
+    transition.to(vLetter, {time = 1500, x = 500, y = 400})
+end
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -112,22 +125,14 @@ function scene:create( event )
 
     --create the sound
     --background sound
-    bkgSound = audio.loadStream("Sounds/fire.wav")
+    bkgSound = audio.loadStream("Sounds/fire.mp3")
     --title sound
-    titleSound = audio.loadStream("Sounds/title.wav")
+    titleSound = audio.loadStream("Sounds/title.mp3")
 
 
     --------------------------------------------------------------------------------------------
     --OBJECT CREATION
     --------------------------------------------------------------------------------------------
-    --create the company logo
-    companyLogo = display.newImage("Images/CompanyLogo.png")
-    --set the position, the size and visibility of the company logo
-    companyLogo.x = display.contentWidth/2
-    companyLogo.y = display.contentHeight/2
-    companyLogo:scale(1.2, 1.2)
-    companyLogo.alpha = 1
-    sceneGroup:insert(companyLogo)
 
     --create the first layer of the fire image
     companyFire = display.newImage("Images/fireText (1).png")
@@ -292,13 +297,34 @@ function scene:create( event )
     name9.alpha = 0
     sceneGroup:insert(name9)
 
+    ------------------------------------------------------------------------------
+    --CREATE THE LETTERS
+    ------------------------------------------------------------------------------
+
+    vLetter = display.newImage("Images/V letter.png")
+    --set the possition, size and visibility
+    vLetter.x = 1000
+    vLetter.y = 1100
+    vLetter:scale(1.2, 1.2)
+    sceneGroup:insert(vLetter)
+
+
+    gLetter = display.newImage("Images/G letter.png")
+    --set the possition, size and visibility
+    gLetter.x = -200
+    gLetter.y = -200
+    gLetter:scale(1.2, 1.2)
+    sceneGroup:insert(gLetter)
+
+ 
     ----------------------------------------------------------------------------------------------------
     --CALL THE FUNCTIONS
     ----------------------------------------------------------------------------------------------------
-
-    timer.performWithDelay(500, setFire)
-    burnName()
+    moveLetters()
+    timer.performWithDelay(1500, setFire)
+    timer.performWithDelay(1500, burnName)
     timer.performWithDelay(3000, titlePlay)
+    timer.performWithDelay(4000, screenTransition)
 end
  
  
